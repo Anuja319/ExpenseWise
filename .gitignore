@@ -1,0 +1,37 @@
+# Python
+
+**pycache**/
+*.py[cod]
+
+# Python virtual environments
+
+.venv/
+venv/
+env/
+
+# Environment variables and secrets
+
+.env
+.env.*
+!.env.example
+
+# Django local database and generated files
+
+ExpenseWise-Backend/db.sqlite3
+ExpenseWise-Backend/db_backup*.sqlite3
+ExpenseWise-Backend/staticfiles/
+ExpenseWise-Backend/media/
+
+# React dependencies and build output
+
+node_modules/
+ExpenseWise-Frontend/node_modules/
+ExpenseWise-Frontend/dist/
+
+# Editors and operating systems
+
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
