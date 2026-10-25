@@ -201,14 +201,47 @@ function App() {
   }
 
   useEffect(() => {
-    if (token) {
-      loadData();
-    } else {
-      setLoading(false);
-      setExpenses([]);
-      setCategories([]);
-      setBudgets([]);
+    let cancelled = false;
+
+    async function initializeApp() {
+      if (!token) {
+        setExpenses([]);
+        setCategories([]);
+        setBudgets([]);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+
+        // Test whether the saved token is still authorized.
+        await getExpenses();
+
+        if (!cancelled) {
+          await loadData();
+        }
+      } catch (err) {
+        if (!cancelled) {
+          localStorage.removeItem("expensewise_token");
+          localStorage.removeItem("expensewise_user");
+
+          setToken(null);
+          setCurrentUser(null);
+          setExpenses([]);
+          setCategories([]);
+          setBudgets([]);
+          setError("Please log in to continue.");
+          setLoading(false);
+        }
+      }
     }
+
+    initializeApp();
+
+    return () => {
+      cancelled = true;
+    };
   }, [token]);
 
   // Dashboard calculations.
