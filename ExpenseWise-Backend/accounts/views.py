@@ -42,6 +42,7 @@ def register(request):
     )
 
 
+
 @api_view(["POST"])
 @permission_classes([AllowAny])
 @authentication_classes([])
@@ -49,11 +50,25 @@ def login(request):
     username = request.data.get("username", "")
     password = request.data.get("password", "")
 
+    if not isinstance(username, str) or not isinstance(password, str):
+        return Response(
+            {"error": "Username and password must be text."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    if not username or not password:
+        return Response(
+            {"error": "Username and password are required."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
     user = authenticate(
         request,
         username=username,
         password=password,
     )
+
+
 
     if user is None:
         return Response(
