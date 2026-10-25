@@ -1,14 +1,19 @@
-from django.db import migrations
+﻿from django.db import migrations
 
 
 def assign_categories(apps, schema_editor):
     Category = apps.get_model("categories", "Category")
     User = apps.get_model("auth", "User")
 
-    megha = User.objects.get(username="Megha")
+    if not Category.objects.filter(user__isnull=True).exists():
+        return
 
-    # Assign existing categories to Megha
-    Category.objects.filter(user__isnull=True).update(user_id=megha.id)
+    user = User.objects.filter(username="Megha").first()
+
+    if user is None:
+        return
+
+    Category.objects.filter(user__isnull=True).update(user_id=user.id)
 
 
 class Migration(migrations.Migration):
