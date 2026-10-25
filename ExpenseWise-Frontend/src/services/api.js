@@ -92,6 +92,10 @@ export async function logoutUser(token) {
 // Get all categories
 export const getCategories = () => request("/categories/");
 
+// Delete a category
+export const deleteCategory = (id) =>
+  request(`/categories/${id}/`, { method: "DELETE" });
+
 // Create a new category
 export const createCategory = (category) =>
   request("/categories/", {

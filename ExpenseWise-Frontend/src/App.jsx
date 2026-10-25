@@ -10,6 +10,7 @@ import {
 import {
   getExpenses,
   getCategories,
+  deleteCategory,
   getBudgets,
   createExpense,
   updateExpense,
@@ -647,6 +648,28 @@ function App() {
     }
   }
 
+  async function handleDeleteCategory(category) {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete the "${category.name}" category?`,
+    );
+    if (!confirmed) return;
+    setError("");
+    setSuccess("");
+    try {
+      setSaving(true);
+      await deleteCategory(category.id);
+      await loadData();
+      setSuccess(`Category "${category.name}" deleted successfully!`);
+    } catch (err) {
+      setError(
+        err.message ||
+          "Unable to delete this category. It may be linked to expenses or budgets.",
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
   function handleLogin(data) {
     localStorage.setItem("expensewise_token", data.token);
 
@@ -1261,6 +1284,15 @@ function App() {
 
                               <strong>{formatCurrency(categoryTotal)}</strong>
                             </div>
+                            <button
+                              type="button"
+                              className="delete-button"
+                              onClick={() => handleDeleteCategory(category)}
+                              disabled={saving}
+                            >
+                              {" "}
+                              {saving ? "Deleting..." : "Delete"}{" "}
+                            </button>
                           </div>
                         </article>
                       );
